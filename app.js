@@ -80,7 +80,20 @@ function handleMessage(senderPsid, receivedMessage) {
     // Create the payload for a basic text message, which
     // will be added to the body of your request to the Send API
     response = {
-      text: `You sent the message: '${receivedMessage.text}'. Now send me an attachment!`,
+      //   text: `You sent the message: '${receivedMessage.text}'. Now send me an attachment!`,
+      text: `Hi, I am Ana, your virtual assistant. How can I help you today?`,
+      quick_replies: [
+        {
+          content_type: "text",
+          title: "Place order",
+          payload: "1",
+        },
+        {
+          content_type: "text",
+          title: "General enquiries",
+          payload: "0",
+        },
+      ],
     };
   } else if (receivedMessage.attachments) {
     // Get the URL of the message attachment
@@ -150,49 +163,17 @@ function callSendAPI(senderPsid, response) {
 
   // Send the HTTP request to the Messenger Platform
   axios
-    .post(
-      "https://graph.facebook.com/v10.0/me/messages",
-      {
-        //   qs: { access_token: PAGE_ACCESS_TOKEN },
-        recipient: {
-          id: senderPsid,
-        },
-        message: response,
+    .post("https://graph.facebook.com/v10.0/me/messages", requestBody, {
+      params: {
+        access_token: PAGE_ACCESS_TOKEN,
       },
-      {
-        params: {
-          access_token: PAGE_ACCESS_TOKEN,
-        },
-      }
-    )
+    })
     .then(function (response) {
       //   console.log(response);
     })
     .catch(function (error) {
       console.log(error);
     });
-  // .catch((err) => {
-  //   if (!err) {
-  //     console.log("Message sent!");
-  //   } else {
-  //     console.error("Unable to send message:" + err);
-  //   }
-  // });
-  //   axios(
-  //     {
-  //       method: "POST",
-  //       url: "https://graph.facebook.com/v2.6/me/messages",
-  //       qs: { access_token: PAGE_ACCESS_TOKEN },
-  //       json: requestBody,
-  //     },
-  //     (err, _res, _body) => {
-  //       if (!err) {
-  //         console.log("Message sent!");
-  //       } else {
-  //         console.error("Unable to send message:" + err);
-  //       }
-  //     }
-  //   );
 }
 
 // Sets server port and logs message on success
