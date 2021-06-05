@@ -21,7 +21,7 @@ app.get("/webhook", (req, res) => {
   let token = req.query["hub.verify_token"];
   let challenge = req.query["hub.challenge"];
 
-  console.log(mode, token, challenge);
+  //   console.log(mode, token, challenge);
 
   // Checks if a token and mode is in the query string of the request
   if (mode && token) {
@@ -150,17 +150,34 @@ function callSendAPI(senderPsid, response) {
 
   // Send the HTTP request to the Messenger Platform
   axios
-    .post("https://graph.facebook.com/v2.6/me/messages", {
-      qs: { access_token: PAGE_ACCESS_TOKEN },
-      json: requestBody,
-    })
-    .catch((err) => {
-      if (!err) {
-        console.log("Message sent!");
-      } else {
-        console.error("Unable to send message:" + err);
+    .post(
+      "https://graph.facebook.com/v2.6/me/messages",
+      {
+        //   qs: { access_token: PAGE_ACCESS_TOKEN },
+        recipient: {
+          id: senderPsid,
+        },
+        message: response,
+      },
+      {
+        params: {
+          access_token: PAGE_ACCESS_TOKEN,
+        },
       }
+    )
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
     });
+  // .catch((err) => {
+  //   if (!err) {
+  //     console.log("Message sent!");
+  //   } else {
+  //     console.error("Unable to send message:" + err);
+  //   }
+  // });
   //   axios(
   //     {
   //       method: "POST",
